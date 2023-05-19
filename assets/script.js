@@ -5,7 +5,7 @@ function fetchWeather(url, containerId) {
       const weatherContainer = document.getElementById(containerId);
       weatherContainer.innerHTML = '';
 
-      const forecasts = data.list.slice(1, 6); // Extract the forecasts for the next 5 days
+      const forecasts = data.list.slice(0, 6); // Extract the forecasts for the next 6 days
 
       forecasts.forEach((forecast, index) => {
         const date = new Date();
@@ -18,6 +18,7 @@ function fetchWeather(url, containerId) {
         const forecastHtml = `
           <div class="weather-forecast">
             <p class="day-of-week">${dayOfWeek}</p>
+            <p class="date">${formatDate(date)}</p>
             <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon">
             <p class="temperature">${temperature}°F</p>
             <p class="humidity">Humidity: ${humidity}%</p>
@@ -31,16 +32,19 @@ function fetchWeather(url, containerId) {
     });
 }
 
-
-
-
+//date format
+function formatDate(date) {
+  const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
 
 function getDayOfWeek(dayIndex) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return daysOfWeek[dayIndex];
 }
 
-var fetchWeatherByZip = function(zipCode) {
+var fetchWeatherByZip = function() {
+  var zipCode = document.getElementById('zip-enter').value; // Get the value of the input field
   var enteredCity = 'https://api.openweathermap.org/geo/1.0/zip?zip=' + zipCode + '&appid=263899f28c1a4fdfb9c42daf32e3c285';
 
   fetch(enteredCity)
@@ -51,65 +55,103 @@ var fetchWeatherByZip = function(zipCode) {
       var loadWeather = 'https://api.openweathermap.org/data/2.5/forecast/?lat=' + lat + '&lon=' + lon + '&cnt=6&appid=263899f28c1a4fdfb9c42daf32e3c285&units=imperial';
 
       fetch(loadWeather)
-      .then(response => response.json())
-      .then(data => {
-        var todayForecast = data.list[0];
-        var city = data.city.name;
-        var weatherIcon = todayForecast.weather[0].icon;
-        var temperature = Math.round(todayForecast.main.temp);
-        var humidity = todayForecast.main.humidity;
-  
-        var todayDate = new Date(todayForecast.dt * 1000);
-        var dayOfWeek = getDayOfWeek(todayDate.getDay());
-  
-        var todayHtml = `
-          <div id="sameday" class="weather-card">
-            <h2>${city}</h2>
-            <p class="date">${dayOfWeek}</p>
-            <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon">
-            <p class="temperature">${temperature}°F</p>
-            <p class="humidity">Humidity: ${humidity}%</p>
-          </div>
-        `;
-        document.getElementById('sameday').innerHTML = todayHtml;
-  
-        // Fetch and display 5-day forecast
-        fetchWeather(loadWeather, 'forecast-container');
-      })
-      .catch(error => {
-        console.log('Error fetching weather:', error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          var todayForecast = data.list[0];
+          var city = data.city.name;
+          var weatherIcon = todayForecast.weather[0].icon;
+          var temperature = Math.round(todayForecast.main.temp);
+          var humidity = todayForecast.main.humidity;
+
+          var todayDate = new Date(todayForecast.dt * 1000);
+          var dayOfWeek = getDayOfWeek(todayDate.getDay());
+
+          var todayHtml = `
+            <div id="sameday" class="weather-card">
+              <h2>${city}</h2>
+              <p class="date">${dayOfWeek}</p>
+              <p class="date">${formatDate(todayDate)}</p>
+              <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon">
+              <p class="temperature">${temperature}°F</p>
+              <p class="humidity">Humidity: ${humidity}%</p>
+            </div>
+          `;
+          document.getElementById('sameday').innerHTML = todayHtml;
+
+          // Save the search history
+          saveSearchHistory(zipCode);
+
+          // Fetch and display 5-day forecast
+          fetchWeather(loadWeather, 'forecast-container');
+        })
+        .catch(error => {
+          console.log('Error fetching weather:', error);
+        });
     })
     .catch(error => {
       console.log('Error fetching city:', error);
     });
 };
 
-function saveSearch(zipCode) {
-  const dropdownMenu = document.getElementById('dropdownitems');
-  const existingSearch = Array.from(dropdownMenu.children).find(item => item.textContent === zipCode);
+// Function to save the search history
+function saveSearchHistory(zipCode) {
+  var searchHistory = localStorage.getItem('searchHistory'); // Get the existing search history from local storage
 
-  if (!existingSearch) {
-    const searchItem = document.createElement('li');
-    searchItem.textContent = zipCode;
-    searchItem.addEventListener('click', function() {
-      document.getElementById('city-enter').value = zipCode;
-      document.getElementById('subBtn').click();
+  if (searchHistory) {
+    searchHistory = JSON.parse(searchHistory); // Parse the JSON string to an object
+
+    // Check if the zip code already exists in the search history
+    if (!searchHistory.includes(zipCode)) {
+      searchHistory.unshift(zipCode); // Add the new zip code to the beginning of the array
+    }
+  } else {
+    searchHistory = [zipCode]; // Create a new array with the zip code if no search history exists
+  }
+
+  localStorage.setItem('searchHistory', JSON.stringify(searchHistory)); // Save the updated search history to local storage
+  loadSearchHistory(); // Reload the search history
+}
+
+// Function to load the search history
+function loadSearchHistory() {
+  var searchHistory = localStorage.getItem('searchHistory');
+
+  if (searchHistory) {
+    searchHistory = JSON.parse(searchHistory); // Parse the JSON string to an object
+
+    var dropdownItems = document.getElementById('dropdownitems');
+
+    // Clear the existing dropdown items
+    dropdownItems.innerHTML = '';
+
+    // Add the search history items to the dropdown
+    searchHistory.forEach(zipCode => {
+      var dropdownItem = document.createElement('li');
+      dropdownItem.innerHTML = `<a href="#" onclick="retrieveWeatherByZip('${zipCode}')">${zipCode}</a>`;
+      dropdownItems.appendChild(dropdownItem);
     });
-    dropdownMenu.prepend(searchItem);
   }
 }
 
-var clearBtn = document.getElementById('clearBtn');
-clearBtn.addEventListener('click', function() {
-  const dropdownMenu = document.getElementById('dropdownitems');
-  dropdownMenu.innerHTML = '';
+// Function to retrieve weather data by zip code from the search history
+function retrieveWeatherByZip(zipCode) {
+  document.getElementById('zip-enter').value = zipCode; // Set the zip code in the input field
+  fetchWeatherByZip(); // Fetch weather data for the selected zip code
+}
+
+// Event listener for the Submit button
+document.getElementById('subBtn').addEventListener('click', function(event) {
+  event.preventDefault(); // Prevent the form from submitting
+  fetchWeatherByZip();
 });
 
-var submitBtn = document.getElementById('subBtn');
-submitBtn.addEventListener('click', function(event) {
-  event.preventDefault();
-  var enteredZipCode = document.getElementById('city-enter').value;
-  fetchWeatherByZip(enteredZipCode);
-  saveSearch(enteredZipCode);
+// Event listener for the Clear Searches button
+// Event listener for the Clear Searches button
+document.getElementById('clearBtn').addEventListener('click', function() {
+  localStorage.removeItem('searchHistory'); // Remove the search history from local storage
+  document.getElementById('dropdownitems').innerHTML = ''; // Clear the dropdown items
 });
+
+// Load the search history when the page loads
+loadSearchHistory();
+
