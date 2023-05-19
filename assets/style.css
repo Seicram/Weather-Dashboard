@@ -1,0 +1,126 @@
+#weather-container {
+    margin-bottom: 20px;
+  }
+  
+  #weatherheader {
+    background: linear-gradient(to right, #1B4F8F, #314F8F, #61008F);
+    color: white;
+    line-height: 300%;
+    font-size: 300%;
+    text-align: center;
+  }
+  
+  #local-weather-container {
+    margin-top: 20px;
+  }
+  
+  #local-weather {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .daily-weather {
+    background-color: #1B4F8F;
+    width: 300px;
+    height: 250px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 6%;
+    color: white;
+    font-size: 175%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .weekly-weather {
+    background-color: #1B4F8F;
+    width: 600px;
+    height: 250px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 6%;
+    color: white;
+    font-size: 175%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .day-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .day-info img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .week-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .week-info div {
+    flex-basis: 33%;
+    text-align: center;
+  }
+  
+  @media (max-width: 767px) {
+    #weather-container,
+    #local-weather-container {
+      width: 100%;
+    }
+  
+    .daily-weather,
+    .weekly-weather {
+      width: 100%;
+    }
+  }
+
+
+/* Add this CSS code to your existing style.css file */
+
+.weather-forecast {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease;
+  flex: 0 0 265px; /* Adjust the width of each card as needed */
+}
+
+.weather-forecast:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.weather-forecast .day-of-week {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.weather-forecast img {
+  width: 80px;
+  height: 80px;
+}
+
+.weather-forecast .temperature {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.weather-forecast .humidity {
+  font-size: 16px;
+}
+
+#forecast-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
