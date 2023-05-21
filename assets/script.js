@@ -32,7 +32,7 @@ function fetchWeather(url, containerId) {
     });
 }
 
-//date format
+// Date format
 function formatDate(date) {
   const options = { month: 'long', day: 'numeric', year: 'numeric' };
   return date.toLocaleDateString('en-US', options);
@@ -45,14 +45,15 @@ function getDayOfWeek(dayIndex) {
 
 var fetchWeatherByZip = function() {
   var zipCode = document.getElementById('zip-enter').value; // Get the value of the input field
-  var enteredCity = 'https://api.openweathermap.org/geo/1.0/zip?zip=' + zipCode + '&appid=263899f28c1a4fdfb9c42daf32e3c285';
+  var enteredCity = 'https://api.openweathermap.org/geo/1.0/zip?zip=' + zipCode + '&appid=986979ba094605639e44eaca0a6e1e44';
+
 
   fetch(enteredCity)
     .then(response => response.json())
     .then(data => {
       var lat = data.lat;
       var lon = data.lon;
-      var loadWeather = 'https://api.openweathermap.org/data/2.5/forecast/?lat=' + lat + '&lon=' + lon + '&cnt=6&appid=263899f28c1a4fdfb9c42daf32e3c285&units=imperial';
+      var loadWeather = 'https://api.openweathermap.org/data/2.5/forecast/?lat=' + lat + '&lon=' + lon + '&cnt=6&appid=986979ba094605639e44eaca0a6e1e44&units=imperial';
 
       fetch(loadWeather)
         .then(response => response.json())
@@ -146,7 +147,6 @@ document.getElementById('subBtn').addEventListener('click', function(event) {
 });
 
 // Event listener for the Clear Searches button
-// Event listener for the Clear Searches button
 document.getElementById('clearBtn').addEventListener('click', function() {
   localStorage.removeItem('searchHistory'); // Remove the search history from local storage
   document.getElementById('dropdownitems').innerHTML = ''; // Clear the dropdown items
@@ -154,4 +154,3 @@ document.getElementById('clearBtn').addEventListener('click', function() {
 
 // Load the search history when the page loads
 loadSearchHistory();
-
