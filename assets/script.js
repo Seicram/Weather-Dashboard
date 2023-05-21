@@ -5,7 +5,7 @@ function fetchWeather(url, containerId) {
       const weatherContainer = document.getElementById(containerId);
       weatherContainer.innerHTML = '';
 
-      const forecasts = data.list.slice(0, 6); // Extract the forecasts for the next 6 days
+      const forecasts = data.list.slice(0, 5); // Extract the forecasts for the next 5 days
 
       forecasts.forEach((forecast, index) => {
         const date = new Date();
