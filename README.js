@@ -11,14 +11,26 @@ const fileExtensions = {
 const dictionary = {
   outcome: 'the result or consequence of a series of actions',
   HTML: 'Hypertext Markup Language, the standard language for creating web pages',
-  CSS: 'Cascading Style Sheets, used to define the presentation of a document',
+  CSS: 'Cascading Style Sheets, used to define the styles and layout of the web page',
   JavaScript: 'a high-level programming language used for web development',
   web: 'a network of interconnected documents and resources',
   development: 'the process of creating and improving software or websites',
+  project: 'a planned undertaking with defined objectives and deliverables',
   achieve: 'to successfully reach or accomplish a desired goal',
   combination: 'the act of joining or merging different elements',
   utilize: 'to make use of or employ something',
 };
+
+const basicPackageInstallations = [
+  'bulma',
+  'bootstrap',
+  'jquery',
+  'axios',
+  'lodash',
+  'moment',
+  'jsonwebtoken',
+  // Add more basic packages here
+];
 
 function generateBadge(license) {
   return `Licensed under ${license}`;
@@ -43,10 +55,10 @@ function generateSynopsis(fileType) {
   return fileTypeDescriptions[fileType] || '';
 }
 
-function generateDescription(title, files) {
+function generateDescription(title, fileTypes) {
   const titleWords = title.split(' ');
 
-  let description = `The "${title}" project is a web development endeavor aimed at achieving a desired outcome by combining`;
+  let description = `The "${title}" project is a web development project that aims to achieve an outcome by combining the power of`;
 
   const outcomeWords = [];
   titleWords.forEach((word) => {
@@ -56,170 +68,150 @@ function generateDescription(title, files) {
   });
 
   if (outcomeWords.length > 0) {
-    const randomOutcome = outcomeWords[Math.floor(Math.random() * outcomeWords.length)];
-    description += ` ${randomOutcome} to successfully accomplish the desired goal. `;
+    description += ` ${outcomeWords.join(', ')} to achieve the desired outcome. `;
   } else {
-    const randomCombination = ['an amalgamation', 'a fusion', 'a blend'][Math.floor(Math.random() * 3)];
-    description += ` the power of various web development technologies in ${randomCombination} to achieve the desired outcome. `;
+    description += ` various web development technologies to achieve the desired outcome. `;
   }
 
-  const randomTech = ['HTML', 'CSS', 'JavaScript'][Math.floor(Math.random() * 3)];
-
-  const randomFeature = ['dynamic and interactive', 'responsive and adaptive', 'visually appealing', 'user-friendly'][Math.floor(Math.random() * 4)];
-  const randomAction = ['creating', 'enhancing', 'building'][Math.floor(Math.random() * 3)];
-  const randomAdjective = ['an intuitive', 'a captivating', 'an immersive'][Math.floor(Math.random() * 3)];
-  const randomMethod = ['skillful use', 'expert application', 'effective utilization'][Math.floor(Math.random() * 3)];
-  const randomDetail = ['meticulous attention to detail', 'careful craftsmanship', 'thorough implementation'][Math.floor(Math.random() * 3)];
-  const randomDesign = ['seamless and engaging', 'visually stunning', 'modern and elegant'][Math.floor(Math.random() * 3)];
-  const randomDevice = ['various devices and screen sizes', 'desktop and mobile devices', 'different browsers and platforms'][Math.floor(Math.random() * 3)];
-  const randomSolution = ['industry best practices', 'cutting-edge techniques', 'innovative approaches'][Math.floor(Math.random() * 3)];
-  const randomExpression = ['high-quality web solution', 'top-notch web experience', 'excellent end result'][Math.floor(Math.random() * 3)];
-  const randomWord = ['development', 'programming', 'coding'][Math.floor(Math.random() * 3)];
-
-  description += `The project utilizes ${randomTech} to create ${randomFeature} web pages. `;
-  description += `By ${randomAction} a seamless and engaging user experience, the project aims to provide ${randomAdjective} web browsing experience. `;
-  description += `The combination of ${randomTech}, ${randomMethod} of HTML for content structure, CSS for styling and layout, and JavaScript for interactivity and behavior, `;
-  description += `with ${randomDetail} and a focus on user experience, the project strives to create a ${randomDesign} web application. `;
-  description += `With a responsive and adaptive design, the project ensures the website looks great on ${randomDevice}. `;
-  description += `By following ${randomSolution} and staying up-to-date with modern web development techniques, `;
-  description += `the project aims to deliver ${randomExpression} that meets the needs of its target audience. `;
-  description += `In summary, the "${title}" project represents the application of web `;
-  description += `${randomWord} skills to create a web application that is ${randomFeature}, visually appealing, and user-friendly.`;
+  description += `The project utilizes web development technologies such as HTML, CSS, and JavaScript to create a dynamic and interactive web page. `;
+  description += `By leveraging the power of these technologies, the project aims to deliver a visually appealing and user-friendly experience. `;
+  description += `Through skillful use of HTML for content structure, CSS for styling and layout, and JavaScript for interactivity and behavior, the project strives to create a seamless and engaging web application. `;
+  description += `With meticulous attention to detail and a focus on user experience, the project seeks to provide an intuitive and enjoyable web browsing experience. `;
+  description += `The combination of HTML, CSS, and JavaScript allows for the creation of a responsive and adaptive design, ensuring the website looks great on various devices and screen sizes. `;
+  description += `By following industry best practices and staying up-to-date with modern web development techniques, the project aims to deliver a high-quality web solution that meets the needs of its target audience. `;
+  description += `Overall, the "${title}" project represents the application of web development skills and technologies to create a compelling and functional web experience. `;
 
   return description;
 }
 
-
-
 function generateUsageSynopsis(title, description, fileTypes) {
-  let usageSynopsis = `The "${title}" project offers a practical application of web development skills, showcasing the synergy of HTML, CSS, and JavaScript in building a dynamic and interactive web experience. `;
+  let usageSynopsis = `The "${title}" project offers a practical application of web development skills and techniques. It provides a combination of HTML, CSS, and JavaScript files to create a fully functional web page. `;
+  usageSynopsis += `The project's main focus is to ${description}. `;
+  usageSynopsis += `The following table provides an overview of the files included in the project:\n\n`;
+  usageSynopsis += `| File | Description |\n`;
+  usageSynopsis += `| --- | --- |\n`;
 
-  if (fileTypes.length > 0) {
-    const fileTypesList = fileTypes.map((fileType) => fileType.toLowerCase()).join(', ');
-    usageSynopsis += `The project incorporates ${fileTypesList} to enhance the user interface and deliver a visually appealing design. `;
-  }
-
-  const randomUserAction = ['interacting with dynamic content', 'navigating through intuitive user interfaces', 'enjoying the visual aesthetics'][Math.floor(Math.random() * 3)];
-  const randomUserExperience = ['an immersive', 'a captivating', 'a seamless'][Math.floor(Math.random() * 3)];
-  const randomUserInterface = ['well-crafted', 'intuitive', 'user-friendly'][Math.floor(Math.random() * 3)];
-  const randomDeviceCompatibility = ['different devices and browsers', 'various screen sizes and platforms', 'a wide range of viewing environments'][Math.floor(Math.random() * 3)];
-  const randomPower = ['leverage', 'utilize', 'harness'][Math.floor(Math.random() * 3)];
-  const randomRobustness = ['robust', 'powerful', 'flexible'][Math.floor(Math.random() * 3)];
-  const randomAdditionalBenefit = [
-    'Users can collaborate with others in real-time through the project\'s built-in chat functionality. ',
-    'The project implements gamification elements to make the web experience more engaging and enjoyable. ',
-    'It provides seamless integration with popular social media platforms, allowing users to easily share content. ',
-    'The web application includes advanced search and filtering capabilities to help users find the information they need. ',
-  ][Math.floor(Math.random() * 4)];
-
-  usageSynopsis += `Users can explore the website and ${randomUserAction}, experiencing ${randomUserExperience} web experience. `;
-  usageSynopsis += `The project encourages user engagement and interactivity through its ${randomUserInterface} user interface and intuitive navigation. `;
-  usageSynopsis += `With a responsive design and compatibility across ${randomDeviceCompatibility}, the web page adapts seamlessly to different devices and browsers, ensuring a consistent experience for all users. `;
-  usageSynopsis += `By ${randomPower} the power of web development technologies, the "${title}" project provides a ${randomRobustness} and interactive web experience that is visually appealing and user-friendly. `;
-  usageSynopsis += randomAdditionalBenefit;
+  fileTypes.forEach((fileType) => {
+    usageSynopsis += `| ${fileType} | ${generateSynopsis(fileType)} |\n`;
+  });
 
   return usageSynopsis;
 }
 
-inquirer
-  .prompt([
+function detectInstallationInstructions(fileTypes) {
+  const installationInstructions = [];
+
+  if (fileTypes.includes('HTML')) {
+    installationInstructions.push(`${generateSynopsis('HTML')} ${dictionary['HTML']}`);
+  }
+
+  if (fileTypes.includes('CSS')) {
+    installationInstructions.push(`${generateSynopsis('CSS')} ${dictionary['CSS']}`);
+  }
+
+  if (fileTypes.includes('JavaScript')) {
+    installationInstructions.push(`${generateSynopsis('JavaScript')} ${dictionary['JavaScript']}`);
+  }
+
+  // Basic package installations
+  if (fileTypes.includes('JavaScript')) {
+    const packagesList = basicPackageInstallations.map(pkg => `- Install ${pkg}: \`npm install ${pkg}\``);
+    installationInstructions.push('To use some common JavaScript libraries, you can install the following packages using npm:\n' + packagesList.join('\n'));
+  }
+
+  return installationInstructions;
+}
+
+async function promptUser() {
+  return inquirer.prompt([
     {
       type: 'input',
       name: 'title',
-      message: 'Enter the Title of your Project:',
+      message: "What's the title of your project?",
     },
-  ])
-  .then((answers) => {
-    const title = answers.title.trim();
-
-    if (!title) {
-      console.log('Please provide a valid project title.');
-      return;
-    }
-
-    const license = 'UNC Coding Boot Camp - UNC-Chapel Hill';
-    const licenseBadge = generateBadge(license);
-
-    const currentDir = process.cwd();
-
-    const files = fs.readdirSync(currentDir);
-    const fileTypes = files
-      .map((file) => {
-        const extension = path.extname(file);
-        return fileExtensions[extension];
-      })
-      .filter(Boolean);
-
-    const description = generateDescription(title, files);
-    const usageSynopsis = generateUsageSynopsis(title, description, fileTypes);
-
-    let readmeContent = `
-# ${title}
-
-## Table of Contents
-
-- [Description](#description)
-- [Usage](#usage)
-- [Credits](#credits)
-- [License](#license)
-`;
-
-    const tableOfContents = [];
-
-    if (fileTypes.includes('HTML')) {
-      tableOfContents.push('- [HTML](#html)');
-      readmeContent += `
-## HTML
-
-${generateSynopsis('HTML')}
-`;
-    }
-
-    if (fileTypes.includes('JavaScript')) {
-      tableOfContents.push('- [JavaScript](#javascript)');
-      readmeContent += `
-## JavaScript
-
-${generateSynopsis('JavaScript')}
-`;
-    }
-
-    if (fileTypes.includes('CSS')) {
-      tableOfContents.push('- [CSS](#css)');
-      readmeContent += `
-## CSS
-
-${generateSynopsis('CSS')}
-`;
-    }
-
-    // Append the updated Table of Contents
-    readmeContent = readmeContent.replace(
-      '## Table of Contents',
-      `## Table of Contents\n\n${tableOfContents.join('\n')}`
-    );
-
-    readmeContent += `
-## Description
-
-${description}
-
-## Usage
-
-${usageSynopsis}
-
-## Credits
-
-This project was developed by Marcies Smith.
-
-## License
-
-${licenseBadge}
-`;
-
-    const readmePath = path.join(currentDir, 'README.md');
-    fs.writeFile(readmePath, readmeContent, (err) => {
-      if (err) throw err;
-      console.log('README.md file created successfully.');
-    });
+    {
+      type: 'input',
+      name: 'github',
+      message: 'Enter the GitHub link for your project:',
+    },
+    {
+      type: 'input',
+      name: 'deployment',
+      message: 'Enter the deployment link for your project:',
+    },
+    {
+      type: 'input',
+      name: 'video',
+      message: 'Enter the video link for your project:',
+    },
+  ]).then((answers) => {
+    answers.fileTypes = ['HTML', 'CSS', 'JavaScript'];
+    answers.license = 'UNC Coding Boot Camp - UNC-Chapel Hill';
+    return answers;
   });
+}
+
+async function generateReadme() {
+  const { title, fileTypes, license, github, deployment, video } = await promptUser();
+  const description = generateDescription(title, fileTypes);
+
+  let readmeContent = `# ${title}\n\n## Table of Contents\n`;
+
+  readmeContent += `- [Description](#description)\n`;
+  readmeContent += `- [Usage](#usage)\n`;
+  readmeContent += `- [Installation](#installation)\n`;
+  readmeContent += `- [Credits](#credits)\n`;
+  readmeContent += `- [Links](#links)\n`;
+
+  if (license !== 'None') {
+    readmeContent += `- [License](#license)\n`;
+  }
+
+  readmeContent += `\n## Description\n\n${description}\n\n`;
+
+  readmeContent += `\n## Usage\n\n${generateUsageSynopsis(title, description, fileTypes)}\n`;
+
+  readmeContent += `\n## Installation\n`;
+
+  const installationInstructions = detectInstallationInstructions(fileTypes);
+
+  if (installationInstructions.length > 0) {
+    installationInstructions.forEach((instruction, index) => {
+      readmeContent += `\n**Step ${index + 1}:**\n\n${instruction}\n`;
+    });
+  } else {
+    readmeContent += `\nNo additional installation steps are required for this project.\n`;
+  }
+
+  readmeContent += `\n## Credits\n\n`;
+
+  if (github) {
+    readmeContent += `- This project was developed by Marcies Smith.\n`;
+  }
+
+  readmeContent += `\n## Links\n\n`;
+
+  if (github) {
+    readmeContent += `- [GitHub Repository](${github})\n`;
+  }
+
+  if (deployment) {
+    readmeContent += `- [Deployed Application](${deployment})\n`;
+  }
+
+  if (video) {
+    readmeContent += `- [Demo Video](${video})\n`;
+  }
+
+  if (license !== 'None') {
+    readmeContent += `\n## License\n\n${generateBadge(license)}\n`;
+  }
+
+  const outputPath = path.join(__dirname, 'README.md');
+  fs.writeFileSync(outputPath, readmeContent);
+
+  console.log(`README.md file generated successfully at ${outputPath}`);
+}
+
+
+generateReadme();
